@@ -36,8 +36,9 @@ app.get('/about', (req, res) => {
 
 // Add Persona form 
 app.get('/personas/add', (req, res) => {
-    res.render('/personas/add')
+    res.render('personas/add')
 })
+
 
 
 
