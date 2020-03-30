@@ -1,1 +1,8 @@
-<h1>Personas</h1>
+{{#each personas}}
+    <div class="card card-body mb-2">
+        <h4>{{name}}</h4>
+        <p>{{description}}</p>
+    </div>
+{{else}}
+    <p>Get thinking about imaginary people!</p>
+{{/each}}
