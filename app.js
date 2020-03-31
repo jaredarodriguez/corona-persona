@@ -1,9 +1,9 @@
-const express = require('express'); 
+const express = require('express');
 const exphbs = require('express-handlebars');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
-const session = require('express-session')
-const bodyParser = require('body-parser'); 
+const session = require('express-session'); 
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const app = express(); 
