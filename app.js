@@ -1,6 +1,8 @@
 const express = require('express'); 
 const exphbs = require('express-handlebars');
 const methodOverride = require('method-override');
+const flash = require('connect-flash');
+const session = require('express-session')
 const bodyParser = require('body-parser'); 
 const mongoose = require('mongoose');
 
@@ -31,6 +33,22 @@ app.use(bodyParser.json())
 // Method override middleware
 app.use(methodOverride('_method')); 
 
+// Express session middleware
+app.use(session({
+    secret: 'secret', 
+    resave: true,
+    saveUninitialized: true
+}))
+
+app.use(flash());
+
+// Global Variables
+app.use(function(req, res, next){
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    next(); 
+})
 
 // Index Route 
 app.get('/', (req, res) => {
@@ -100,6 +118,7 @@ app.post('/personas', (req, res) => {
         new Persona(newUser)
         .save()
         .then(persona => {
+            req.flash('success_msg', 'Persona was added')
             res.redirect('/personas')
         })
     }
@@ -116,6 +135,7 @@ app.put('/personas/:id', (req, res) => {
         
         persona.save()
         .then(persona => {
+            req.flash('success_msg', 'Persona was ammended with new info')
             res.redirect('/personas');
         })
     })
@@ -125,6 +145,7 @@ app.put('/personas/:id', (req, res) => {
 app.delete('/personas/:id', (req, res) => {
     Persona.deleteOne({_id: req.params.id})
     .then(() => {
+        req.flash('success_msg', 'Persona disappears from the universe')
         res.redirect('/personas')
     })
 })
