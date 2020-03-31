@@ -31,7 +31,6 @@ app.use(bodyParser.json())
 // Method override middleware
 app.use(methodOverride('_method')); 
 
-const port = 4000; 
 
 // Index Route 
 app.get('/', (req, res) => {
@@ -63,36 +62,64 @@ app.get('/personas/add', (req, res) => {
     res.render('personas/add')
 })
 
+// Edit Persona form
+app.get('/personas/edit/:id', (req, res) => {
+    Persona.findOne({
+        _id: req.params.id
+    })
+    .then(persona => {
+        res.render('personas/edit', {
+            persona: persona
+        })
+    })
+})
+
 
 // Process form 
 app.post('/personas', (req, res) => {
     let errors = []; 
-     
+    
     if(!req.body.name) {
         errors.push({text: 'Please add a name'})
     }
     if(!req.body.description) {
         errors.push({text: 'Please add description'})
     }
-
+    
     if(errors.length > 0) {
         res.render('personas/add', {
             errors: errors, 
             name: req.body.name, 
             description: req.body.description
         }) 
-        } else {
-            const newUser = {
-                name: req.body.name, 
-                description: req.body.description
-            }
-            new Persona(newUser)
-            .save()
-            .then(persona => {
-                res.redirect('/personas')
-            })
+    } else {
+        const newUser = {
+            name: req.body.name, 
+            description: req.body.description
         }
+        new Persona(newUser)
+        .save()
+        .then(persona => {
+            res.redirect('/personas')
+        })
+    }
+})
+
+// Edit a persona
+app.put('/personas/:id', (req, res) => {
+    Persona.findOne({
+        _id: req.params.id
     })
+    .then(persona => {
+        persona.name = req.body.name;
+        persona.description = req.body.description;
+        
+        persona.save()
+        .then(persona => {
+            res.redirect('/personas');
+        })
+    })
+})
 
 // Delete a persona 
 app.delete('/personas/:id', (req, res) => {
@@ -101,6 +128,9 @@ app.delete('/personas/:id', (req, res) => {
         res.redirect('/personas')
     })
 })
+
+
+const port = 4000; 
 
 app.listen(port, () => {
     console.log(`Server started on ${port}`)

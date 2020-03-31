@@ -2,6 +2,7 @@
     <div class="card card-body mb-2">
         <h4>{{name}}</h4>
         <p>{{description}}</p>
+        <a class="btn btn-dark btn-block mb-2" href="/personas/edit/{{id}}">Edit</a> 
         <form method="post" action="/personas/{{id}}?_method=DELETE">
             <input type="hidden" name="_method" value="DELETE">
             <input type="submit" class="btn btn-danger btn-block" value="Delete">
